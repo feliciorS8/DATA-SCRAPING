@@ -1,0 +1,93 @@
+from bs4 import BeautifulSoup
+# import os  # Import os tidak diperlukan jika tidak ada operasi sistem file yang spesifik
+
+# =================================================================
+# CONTOH DATA HTML DARI SEMUA SLIDE
+# Kita gunakan string HTML yang paling kompleks (dari slide terakhir) dan sedikit dimodifikasi
+# agar mencakup semua elemen yang diuji (class='bold', id='d2', dll.)
+# =================================================================
+html_doc = """
+<html>fr
+<body>
+
+<div>Ini adalah paragraf ke satu Div</div>
+<p>Ini adalah paragraf dengan sintag p</p>
+<div class='bold'>Ini adalah paragraf ke dua Div (dengan class 'bold')</div>
+<div>Ini adalah paragraf ke satu Div</div>
+<div>Ini adalah paragraf ke dua Div</div>
+<p id='para'>Ini adalah paragraf dengan id 'para'</p>
+
+<div id='d1' class='wide'>
+    <p id='p1'>Ini Adalah Sintag Paragraf</p>
+    <div><p>OK</p></div>
+    <img src=''/>
+    <a id='a1'>Link a1</a>
+</div>
+
+<div id='d2' class='small'>
+    <p id='p2'>Ini Adalah Sintag Paragraf2</p>
+    <div><p>Teks di dalam div d2</p></div>
+    <img src=''/>
+    <a id='a2'>Link a2</a>
+</div>
+
+</body>
+</html>
+"""
+
+# =================================================================
+# INISIALISASI BEAUTIFULSOUP
+# =================================================================
+soup = BeautifulSoup(html_doc, 'html.parser')
+
+# Print soup (seperti di Slide 4) akan menampilkan semua data yang sudah di-parsing
+print("--- HASIL: print(soup) ---")
+print(soup)
+print("\n" + "="*50 + "\n")
+
+
+# =================================================================
+# CONTOH PENCARIAN DARI SLIDE 1 (find dan find_all)
+# =================================================================
+print("--- CONTOH 1: find() dan find_all() ---")
+print("soup.find('div') (Elemen div pertama):")
+print(soup.find('div'))
+print("\n")
+
+# Mencetak elemen <div> kedua (indeks [1]) dari hasil find_all
+print("soup.find_all('div')[1] (Elemen div kedua):")
+# Catatan: Indeks ini akan bergantung pada total div di html_doc
+print(soup.find_all('div')[1]) 
+print("\n" + "="*50 + "\n")
+
+
+# =================================================================
+# CONTOH PENCARIAN DARI SLIDE 2 (Berdasarkan Class dan ID)
+# =================================================================
+print("--- CONTOH 2: Pencarian Berdasarkan Atribut ---")
+
+# Mencari elemen <div> dengan class='bold'
+print("soup.find_all('div', {'class': 'bold'}):")
+print(soup.find_all("div", {'class': 'bold'}))
+print("\n")
+
+# Mencari elemen <p> dengan id='para'
+print("soup.find_all('p', {'id': 'para'}):")
+print(soup.find_all("p", {'id': 'para'}))
+print("\n" + "="*50 + "\n")
+
+
+# =================================================================
+# CONTOH PENCARIAN DARI SLIDE 5 (Akses ke anak elemen)
+# =================================================================
+print("--- CONTOH 3: Akses ke Anak Elemen (Chain Indexing) ---")
+
+# print(soup.findAll('div',{'id':'d2'})[0].p)
+# Mencari div dengan id='d2', mengambil yang pertama ([0]), lalu mencari tag <p> di dalamnya
+print("soup.find_all('div', {'id': 'd2'})[0].p (Paragraf di dalam div id='d2'):")
+# Note: Di slide, ini ditulis 'findAll', yang merupakan nama lama. Kita gunakan 'find_all'.
+# Kita gunakan .find('p') untuk menghindari error jika ada lebih dari satu <p> di dalamnya.
+d2_element = soup.find_all('div', {'id': 'd2'})
+if d2_element:
+    print(d2_element[0].find('p'))
+print("\n" + "="*50 + "\n")
